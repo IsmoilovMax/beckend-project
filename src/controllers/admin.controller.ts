@@ -3,8 +3,7 @@ import { T } from "../libs/types/common";
 import { AdminRequest, LoginInput, MemberInput } from "../libs/types/member";
 import Errors, { HttpCode, Message } from "../libs/utils/Errors";
 import { MemberType } from "../libs/enums/member.enum";
-import MemberService from "../models/member.service";
-
+import MemberService from "../models/Member.service";
 
 const memberService = new MemberService();
 const adminController: T = {};
@@ -12,7 +11,7 @@ const adminController: T = {};
 adminController.goHome = async (req: Request, res: Response) => {
   try {
     console.log("goHome");
-    res.send("goHome");
+    res.render("home");
   } catch (err) {
     console.log("Error, GoHome:", err);
     res.redirect("/admin");
@@ -22,7 +21,7 @@ adminController.goHome = async (req: Request, res: Response) => {
 adminController.getSignup = async (req: Request, res: Response) => {
   try {
     console.log("getSignup");
-    res.send("getSignup");
+    res.render("signup");
   } catch (err) {
     console.log("ERROR, getSignup:", err);
     res.redirect("/admin");
@@ -32,7 +31,7 @@ adminController.getSignup = async (req: Request, res: Response) => {
 adminController.getLogin = async (req: Request, res: Response) => {
   try {
     console.log("getLogin");
-    res.send("getLogin");
+    res.render("login");
   } catch (err) {
     console.log("ERROR, getLogin:", err);
     res.redirect("/admin");
@@ -56,15 +55,12 @@ adminController.processSignup = async (req: AdminRequest, res: Response) => {
     req.session.save(function () {
       res.redirect("/admin/product/all");
     });
-
-    res.send("result");
   } catch (err) {
-    console.log("ERROR, processSignup:", err);
-    res.send("err");
+    console.log("Error, ProcessSignup:", err);
     const message =
       err instanceof Errors ? err.message : Message.SOMETHING_WENT_WRONG;
     res.send(
-      `<script>alert('${message}); window.location.replace("/admin/signup")</script>`
+      `<script>alert('${message}'); window.location.replace("/admin/signup")</script>`
     );
   }
 };
@@ -95,9 +91,8 @@ adminController.logout = async (req: AdminRequest, res: Response) => {
   try {
     console.log("logout");
     req.session.destroy(function () {
-      res.send("logout");
+      res.redirect("/admin");
     });
-    
   } catch (err) {
     console.log("ERROR, logout:", err);
     res.redirect("/admin");
@@ -107,7 +102,8 @@ adminController.logout = async (req: AdminRequest, res: Response) => {
 adminController.getUser = async (req: Request, res: Response) => {
   try {
     console.log("getUser");
-    res.send("getUser");
+    const result = await memberService.getUsers();
+    res.render("users", { users: result });
   } catch (err) {
     console.log("ERROR, getUser:", err);
   }
@@ -116,38 +112,41 @@ adminController.getUser = async (req: Request, res: Response) => {
 adminController.updateChosenUser = async (req: Request, res: Response) => {
   try {
     console.log("updateChosenUser");
-    res.send("updateChosenUser");
+    const result = await memberService.updateChosenUser(req.body);
+    res.status(HttpCode.OK).json({ data: result });
   } catch (err) {
     console.log("ERROR, updateChosenUser:", err);
   }
 };
 
-
-adminController.checkAuthSession = async (req: AdminRequest, res: Response ) => {
+adminController.checkAuthSession = async (req: AdminRequest, res: Response) => {
   try {
     console.log("checkAuthSession");
-    if(req.session?.member) {
+    if (req.session?.member) {
       res.send(`<script> alert("${req.session.member.memberNick}")</script> `);
-    }else {
+    } else {
       res.send(`<script> alert("${Message.NOT_AUTHENTICATED}")</script>`);
     }
-  }catch(err) {
-    console.log("ERROR, checkAuthSession:", err)
+  } catch (err) {
+    console.log("ERROR, checkAuthSession:", err);
     res.send(err);
   }
-}
+};
 
-adminController.verifyMember = ( req: AdminRequest, res: Response, next: NextFunction) => {
-  if(req.session?.member?.memberType === MemberType.ADMIN) {
-   req.member =  req.session.member;
-   next()
+adminController.verifyMember = (
+  req: AdminRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  if (req.session?.member?.memberType === MemberType.ADMIN) {
+    req.member = req.session.member;
+    next();
   } else {
     const message = Message.NOT_AUTHENTICATED;
-    res.send(`<script>alert('${message}'); window.location.replace('/admin/login')</script>`)
+    res.send(
+      `<script>alert('${message}'); window.location.replace('/admin/login')</script>`
+    );
   }
-}
-
-
-
+};
 
 export default adminController;

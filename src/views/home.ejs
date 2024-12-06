@@ -1,0 +1,142 @@
+<%- include('includes/header') %>
+
+<link
+  href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+  rel="stylesheet"
+/>
+
+<style>
+  /* Full-width background image for the home container */
+  .home-container {
+    background-image: url("/img/home.jpg"); /* Set the image as the background */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    opacity: 0;
+    animation: fadeIn 2s forwards;
+  }
+
+  .home-title {
+    position: absolute;
+    z-index: 1;
+    color: white;
+    font-size: 3rem;
+    font-weight: bold;
+    text-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Add text shadow for better visibility */
+    text-align: center;
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: slideIn 1.5s forwards 0.5s; /* Delay to sync with background fade */
+  }
+
+  /* Keyframes for background fade-in */
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  /* Keyframes for title slide-in */
+  @keyframes slideIn {
+    0% {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Overlay to darken the background image for better text visibility */
+  .home-container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(
+      0,
+      0,
+      0,
+      0.4
+    ); /* Dark overlay for better text readability */
+    z-index: 0;
+  }
+
+  /* Navbar styles */
+  .navbar-bg {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  .nav-item {
+    color: white;
+    font-size: 18px;
+    padding: 8px 16px;
+    transition: color 0.3s ease;
+  }
+
+  .nav-item:hover {
+    color: #f3f4f6;
+  }
+
+  .highlighted-link {
+    background-color: #4b5563;
+    color: white;
+    border-radius: 4px;
+    padding: 8px 16px;
+  }
+</style>
+
+<body class="min-h-screen">
+  <!-- Navigation bar with matching background -->
+  <nav class="navbar-bg fixed top-0 w-full z-10 p-4 shadow-md">
+    <div class="flex justify-center">
+      <ul class="flex justify-between text-center w-full max-w-4xl">
+        <li class="nav-item">
+          <a class="font-bold text-white" href="/admin">Home</a>
+        </li>
+        <% if (!member) { %>
+        <li class="nav-item">
+          <a class="highlighted-link" href="/admin/signup">Signup</a>
+        </li>
+        <li class="nav-item">
+          <a class="highlighted-link" href="/admin/login">Login</a>
+        </li>
+        <% } else { %>
+        <li class="nav-item">
+          <a class="text-white" href="/admin/product/all">Menu</a>
+        </li>
+        <li class="nav-item">
+          <a class="text-white" href="/admin/user/all">Users</a>
+        </li>
+        <li class="nav-item ml-4">
+          <a
+            class="text-red-400 hover:text-red-600"
+            href="/admin/logout"
+            onclick="return confirm('Do you want to logout?')"
+            >Logout</a
+          >
+        </li>
+        <% } %>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Home container with background image and centered text -->
+  <div class="home-container pt-24">
+    <h1 class="home-title animate-pulse">Welcome to the Admin Panel</h1>
+  </div>
+
+  <%- include('includes/footer') %>
+</body>

@@ -1,11 +1,8 @@
 export enum ProductCollection {
-  Prestashop = "Prestashop",
-  Magento = "Magento",
-  Bigcommerce = "Bigcommerce",
-  osCommerce = "osCommerce",
-  Bags = "Bags",
-  Watches = "Watches",
-  Other = "Other"
+  Sale = "Sale",
+  Gift = "Gift",
+  Flower = "Flower",
+  Other = "Other",
 }
 
 export enum ProductStatus {

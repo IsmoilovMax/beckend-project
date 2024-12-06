@@ -1,0 +1,108 @@
+<%- include('includes/header') %>
+
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+
+<style>
+  /* Navigation bar */
+  .navbar-bg {
+    background-color: #1f2937; /* Dark gray background */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  }
+
+  .nav-item {
+    color: white;
+    font-size: 18px;
+    padding: 12px 16px;
+    transition: color 0.3s ease;
+  }
+
+  .nav-item:hover {
+    color: #3b82f6; /* Blue on hover */
+  }
+
+  .highlighted-link {
+    background-color: #3b82f6; /* Blue background */
+    color: white;
+    border-radius: 4px;
+    padding: 8px 16px;
+  }
+
+  /* Form styling */
+  .login-container {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+
+  .bg-image {
+    background-image: url("/img/home.jpg"); /* Set your background image */
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column; /* Align items vertically */
+  }
+
+  .welcome-text {
+    font-size: 2rem;
+    color: white;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-weight: bold;
+  }
+</style>
+
+<body class="bg-image">
+  <!-- Navigation bar -->
+  <nav class="navbar-bg fixed top-0 w-full z-10 p-4">
+    <div class="flex justify-center">
+      <ul class="flex justify-between text-center w-full max-w-4xl">
+        <li class="nav-item">
+          <a class="font-bold text-white" href="/admin">Home</a>
+        </li>
+        <% if (!member) { %>
+        <li class="nav-item">
+          <a class="highlighted-link" href="/admin/signup">Signup</a>
+        </li>
+        <li class="nav-item">
+          <a class="highlighted-link" href="/admin/login">Login</a>
+        </li>
+        <% } else { %>
+        <li class="nav-item">
+          <a class="text-white" href="/admin/product/all">Menu</a>
+        </li>
+        <li class="nav-item">
+          <a class="text-white" href="/admin/user/all">Users</a>
+        </li>
+        <li class="nav-item ml-4">
+          <a class="text-red-400 hover:text-red-600" href="/admin/logout" onclick="return confirm('Do you want to logout?')">Logout</a>
+        </li>
+        <% } %>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Welcome Message -->
+  <div class="welcome-text">Welcome to the Login Panel</div>
+
+  <!-- Login Form -->
+  <div class="login-container p-6 max-w-md w-full mx-auto">
+    <form action="/admin/login" method="POST">
+      <h2 class="text-center text-2xl font-bold mb-4">Login</h2>
+      <div class="mb-4">
+        <label class="block mb-1">Username *</label>
+        <input type="text" name="memberNick" class="border border-gray-300 rounded-lg w-full p-2" placeholder="Username" required />
+      </div>
+      <div class="mb-4">
+        <label class="block mb-1">Password *</label>
+        <input type="password" name="memberPassword" class="border border-gray-300 rounded-lg w-full p-2" placeholder="Password" required />
+      </div>
+      <button class="bg-blue-500 text-white rounded-lg py-2 w-full" name="login" type="submit">Login</button>
+    </form>
+  </div>
+
+</body>
+
+<%- include('includes/footer') %>

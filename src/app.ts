@@ -49,6 +49,8 @@ app.use(function (req, res, next) {
 });
 
 /** express-3-WIEW */
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "ejs");
 
 /** express-4-ROUTERS */
 app.use("/admin", routerAdmin);

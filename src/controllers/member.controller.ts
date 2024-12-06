@@ -1,4 +1,4 @@
-import MemberService from "../models/member.service";
+import MemberService from "../models/Member.service";
 import { T } from "../libs/types/common";
 import Errors, { HttpCode, Message } from "../libs/utils/Errors";
 import { NextFunction, Request, Response } from "express";

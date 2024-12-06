@@ -1,0 +1,205 @@
+<%- include('includes/header') %>
+
+
+
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+
+<body class="bg-gray-50">
+  <div class="container mx-auto p-6">
+    <nav class="flex justify-around bg-white p-4 rounded-lg shadow-md mb-6">
+      <a class="text-gray-700 hover:text-blue-600 font-semibold transition duration-300" href="/admin/">Home</a>
+      <a class="text-gray-700 hover:text-blue-600 font-semibold transition duration-300" href="/admin/product/all">Menu</a>
+      <a class="text-gray-700 hover:text-blue-600 font-semibold transition duration-300" href="/admin/user/all">Users</a>
+      <a class="text-gray-700 hover:text-blue-600 font-semibold transition duration-300" href="/admin/logout" onclick="return confirm('Do you want to logout?')">Logout</a>
+    </nav>
+
+    <div class="bg-white rounded-lg shadow-lg p-6">
+      <h2 class="text-3xl font-bold text-center text-gray-800 mb-4">Product All</h2>
+      <table class="min-w-full bg-white border border-gray-300 rounded-lg shadow-md overflow-hidden">
+        <thead class="bg-blue-600 text-white">
+          <tr>
+            <th class="px-4 py-2">T/r</th>
+            <th class="px-4 py-2">Product Name</th>
+            <th class="px-4 py-2">Product Type</th>
+            <th class="px-4 py-2">Product Volume</th>
+            <th class="px-4 py-2">Product Price</th>
+            <th class="px-4 py-2">Product Left Count</th>
+            <th class="px-4 py-2">Images</th>
+            <th class="px-4 py-2">Status</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white">
+          <% products.map(function(value, key) { %>
+            <tr class="hover:bg-gray-100 transition duration-200 border-b border-gray-200">
+              <td class="px-4 py-2 text-center"><%= key + 1 %></td>
+              <td class="px-4 py-2"><%= value.productName %></td>
+              <td class="px-4 py-2"><%= value.productCollection %></td>
+              <td class="px-4 py-2"><%= value.productCollection === "DRINK" ? value.productVolume : value.productSize %></td>
+              <td class="px-4 py-2 text-center"><%= value.productPrice %> $</td>
+              <td class="px-4 py-2 text-center"><%= value.productLeftCount %></td>
+              <td class="px-4 py-2">
+                <div class="flex space-x-2">
+                  <% value.productImages.forEach(img => { %>
+                    <img src="/<%= img %>" alt="Product Image" class="w-16 h-16 object-cover rounded border border-gray-300 shadow-sm" />
+                  <% }) %>
+                </div>
+              </td>
+              <td class="px-4 py-2">
+                <select class="spec-select new-product-status" id="<%= value._id %>">
+                  <option value="PAUSE" <%= value.productStatus === 'PAUSE' ? 'selected': '' %> >PAUSE</option>
+                  <option value="PROCESS" <%= value.productStatus === 'PROCESS' ? 'selected': '' %> >PROCESS</option>
+                  <option value="DELETE" <%= value.productStatus === 'DELETE' ? 'selected': '' %> >DELETE</option>
+                </select>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+
+      <button class="mt-4 w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition duration-300" id="process-btn">New Product</button>
+
+      <form onsubmit="return ValidityForm()" action="/admin/product/create" method="POST" class="mt-6 hidden" enctype="multipart/form-data">
+        <div class="text-center mb-4">
+          <span class="text-2xl font-bold">NEW PRODUCT DETAIL</span>
+        </div>
+        
+        <div class="mb-4">
+          <label class="block font-medium">Product Name</label>
+          <input type="text" placeholder="Name" name="productName" class="border rounded-lg w-full p-2" required />
+        </div>
+
+        <input name="productStatus" value="PAUSE" class="product-status" hidden />
+
+        <div class="grid grid-cols-2 gap-4 mb-4">
+          <div>
+            <label class="block font-medium">Product Price</label>
+            <input type="number" placeholder="Price" name="productPrice" class="border rounded-lg w-full p-2" required />
+          </div>
+          <div>
+            <label class="block font-medium">Product Left Counts</label>
+            <input type="number" placeholder="Counts" name="productLeftCount" class="border rounded-lg w-full p-2" required />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 mb-4">
+          <div>
+            <label class="block font-medium">Product Type</label>
+            <select class="border rounded-lg w-full p-2" name="productCollection">
+              <option value="Sale" selected>Sale</option>
+              <option value="Gift">Gift</option>
+              <option value="Flower">Flower</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <!-- <div>
+            <label class="block font-medium">Dish Volume</label>
+            <select class="border rounded-lg w-full p-2" name="productSize">
+              <option value="SMALL">Small</option>
+              <option value="NORMAL" selected>Normal</option>
+              <option value="LARGE">Large</option>
+              <option value="SET">Set</option>
+            </select>
+          </div> -->
+        </div>
+
+        <div class="mb-4">
+          <label class="block font-medium">Product Description</label>
+          <textarea name="productDesc" class="border rounded-lg w-full p-2" rows="3"></textarea>
+        </div>
+
+        <div class="mb-4">
+          <label class="block font-medium mb-2">Product Images</label>
+          <div class="img-frame">
+            <div class="media-frame grid grid-cols-5 gap-4">
+              <div class="upload-img-box relative w-full h-34">
+                <img src="/img/upload.svg" class="w-full h-full object-cover rounded border border-gray-300 shadow-sm" id="image-section-1" />
+                <input
+                  type="file"
+                  name="productImages"
+                  class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  required
+                  onchange="previewFileHendler(this, 1)"
+                />
+              </div>
+              <div class="upload-img-box relative w-full h-34">
+                <img src="/img/upload.svg" class="w-full h-full object-cover rounded border border-gray-300 shadow-sm" id="image-section-2" />
+                <input
+                  type="file"
+                  name="productImages"
+                  class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  onchange="previewFileHendler(this, 2)"
+                />
+              </div>
+              <div class="upload-img-box relative w-full h-34">
+                <img src="/img/upload.svg" class="w-full h-full object-cover rounded border border-gray-300 shadow-sm" id="image-section-3" />
+                <input
+                  type="file"
+                  name="productImages"
+                  class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  onchange="previewFileHendler(this, 3)"
+                />
+              </div>
+              <div class="upload-img-box relative w-full h-34">
+                <img src="/img/upload.svg" class="w-full h-full object-cover rounded border border-gray-300 shadow-sm" id="image-section-4" />
+                <input
+                  type="file"
+                  name="productImages"
+                  class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  onchange="previewFileHendler(this, 4)"
+                />
+              </div>
+              <div class="upload-img-box relative w-full h-34">
+                <img src="/img/upload.svg" class="w-full h-full object-cover rounded border border-gray-300 shadow-sm" id="image-section-5" />
+                <input
+                  type="file"
+                  name="productImages"
+                  class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  onchange="previewFileHendler(this, 5)"
+                />
+              </div>
+            </div>
+            <input name="restaurantIid" class="restaurant-id" hidden />
+          </div>
+        </div>
+        
+       
+
+        <div class="flex justify-between mt-6">
+          <button type="button" class="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition duration-300" id="cancel-btn" onclick="cancelCreation()">Cancel</button>
+          <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300" id="create-btn">Create</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  </body>
+
+  <script type="text/javascript" src="/js/products.js"></script>
+  <script>
+    document.getElementById('process-btn').onclick = function() {
+      document.querySelector('form').classList.remove('hidden'); // Show the form
+    };
+
+    function cancelCreation() {
+      document.querySelector('form').reset(); // Reset the form fields
+      document.querySelector('form').classList.add('hidden'); // Hide the form
+    }
+
+    function previewFileHendler(input, index) {
+  const file = input.files[0];
+  const imgSection = document.getElementById(`image-section-${index}`);
+
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      imgSection.src = e.target.result; // Update the src of the image to the file preview
+    };
+    reader.readAsDataURL(file); // Read the file as a data URL
+  } else {
+    imgSection.src = '/img/upload.svg'; // Reset to default if no file
+  }
+}
+
+  </script>
+
+
+<%- include('includes/footer') %>
