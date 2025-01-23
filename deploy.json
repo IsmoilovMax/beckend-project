@@ -1,0 +1,14 @@
+{
+    "apps": [
+      {
+        "name": "startup-next",
+        "script": "./node_modules/next/dist/bin/next",
+        "args": "start",
+        "env": {
+          "PORT": "8080",
+          "NODE_ENV": "production"
+        }
+      }
+    ]
+  }
+  
