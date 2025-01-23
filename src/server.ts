@@ -2,6 +2,9 @@ import dotenv from "dotenv";
 dotenv.config();
 import mongoose from "mongoose";
 import app from "./app";
+dotenv.config({
+    path: process.env.NODE_ENV === "production" ? ".env.production" : ".env"
+})
 
 
 mongoose
