@@ -2,7 +2,7 @@
     "apps": [
       {
         "name": "startup-next",
-        "script": "./node_modules/next/dist/bin/next",
+        "script": "./dist/server.js",
         "args": "start",
         "env": {
           "PORT": "8080",
