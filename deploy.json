@@ -1,7 +1,7 @@
 {
     "apps": [
       {
-        "name": "startup-next",
+        "name": "flower-backend",
         "script": "./dist/server.js",
         "args": "start",
         "env": {
