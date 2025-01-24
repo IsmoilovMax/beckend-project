@@ -7,7 +7,7 @@ git pull origin master
 
 
 
-npm i global add serve --legacy-peer-deps
+npm i --legacy-peer-deps
 npm run build
 pm2 start process.config.js --env production
 
