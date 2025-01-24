@@ -1,7 +1,7 @@
 module.exports = {
 	apps: [
 		{
-			name: 'SERVER',
+			name: 'Flower-Backend',
 			cwd: './', // swd -> cwd (current working directory)
 			script: './dist/server.js',
 			watch: false,
