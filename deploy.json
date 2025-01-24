@@ -2,7 +2,9 @@
     "apps": [
       {
         "name": "flower-backend",
+        "cwd" : "./",
         "script": "./dist/server.js",
+        "watch" : false,
         "args": "start",
         "env": {
           "PORT": "8080",
