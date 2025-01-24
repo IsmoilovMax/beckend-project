@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 import server from "./app";
 
 
-// Подключение к MongoDB с использованием переменной среды MONGO_URL
+// Подключение к MongoDB с использованием переменной среды MONGO_URL MAx
 mongoose.set('strictQuery', true);
 mongoose
     .connect(process.env.MONGO_URL as string, {})
