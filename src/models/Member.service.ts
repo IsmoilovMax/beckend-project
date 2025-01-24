@@ -26,7 +26,7 @@ class MemberService {
 
     if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.NICK_NOT_FOUND);
 
-    return result;
+    return result as any;
   }
 
   public async signup(input: MemberInput): Promise<Member> {
@@ -68,7 +68,7 @@ class MemberService {
     if (!isMatch)
       throw new Errors(HttpCode.UNAUTHORISED, Message.NOT_AUTHENTICATED);
 
-    return await this.memberModel.findById(member._id).lean().exec();
+    return await this.memberModel.findById(member._id).lean().exec() as any;
   }
 
   public async getMemberDetail(member: Member): Promise<Member> {
@@ -78,7 +78,7 @@ class MemberService {
       .exec();
 
     if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
-    return result;
+    return result as any;
   }
 
   public async updateMember(
@@ -91,7 +91,7 @@ class MemberService {
       .exec();
 
     if (!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
-    return result;
+    return result as any;
   }
 
   public async getTopUsers(): Promise<Member[]> {
@@ -103,7 +103,7 @@ class MemberService {
 
     if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.NICK_NOT_FOUND);
 
-    return result;
+    return result as any;
   }
 
   public async addUserPoint(member: Member, point: number): Promise<Member> {
@@ -119,7 +119,7 @@ class MemberService {
         { $inc: { memberPoints: point } },
         { new: true }
       )
-      .exec();
+      .exec() as any;
   }
 
   /**SSR  */
@@ -143,7 +143,7 @@ class MemberService {
       const result = await this.memberModel.create(input);
       result.memberPassword = "";
 
-      return result;
+      return result as any;
     } catch (err) {
       throw new Errors(HttpCode.BAD_REQUEST, Message.CREATE_FAILED);
     }
@@ -171,7 +171,7 @@ class MemberService {
     }
 
     const result = await this.memberModel.findById(member._id).exec();
-    return result;
+    return result as any;
   }
   public async getUsers(): Promise<Member[]> {
     const result = await this.memberModel
@@ -191,7 +191,7 @@ class MemberService {
 
     if (!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
 
-    return result as Member;
+    return result as any;
   }
 }
 

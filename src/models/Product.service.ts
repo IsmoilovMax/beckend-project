@@ -99,7 +99,7 @@ class ProductService {
       throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
     }
     console.log("result:", result);
-    return result;
+    return result as any;
   }
 
   public async createNewProduct(input: ProductInput): Promise<Product> {

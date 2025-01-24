@@ -40,7 +40,7 @@ class OrderService {
         orderTotal: amout + delivery,
         orderDelivery: delivery,
         memberId: memberId,
-      });
+      }) as any;
 
       const orderId = newOrder._id;
       console.log("OrderId:", newOrder._id);
@@ -124,7 +124,7 @@ class OrderService {
       await this.memberService.addUserPoint(member, 1);
     }
 
-    return result;
+    return result as any; 
   }
 }
 
