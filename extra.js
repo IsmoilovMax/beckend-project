@@ -3,7 +3,7 @@ const fs = require('fs-extra');
 const directoriesToCopy = [
 	{ source: 'src/views', destination: 'dist/views' },
 	{ source: 'src/public', destination: 'dist/public' },
-	{ source: 'uploads', destination: 'dist/uploads' }
+	{ source: 'src/uploads', destination: 'dist/uploads' }
 ];
 
 async function copyDirectories() {
